@@ -20,7 +20,6 @@ router.post("/boleto",cors(corsOptions),function boleto(req, res){
     var token= localStorage.getItem('token');
     var cpf = req.body.cpf;
     var idchat = req.body.idchat;
-    localStorage.setItem('idchat', idchat );
     const headers = {
         "Accept":"application/json",
         "Authorization": "Bearer " + token 
@@ -40,28 +39,56 @@ router.post("/boleto",cors(corsOptions),function boleto(req, res){
       json: true,
       url: url
     }
-    request(options, function (err, res, body) {
-        if (err) {
-          console.error('error posting json: ', err)
-          throw err
-        }
-        for (var i = 0; i < body.faturas.length; i++) {
-          var boleto = body.faturas[i];
-          var boletovencimento = boleto.data_vencimento
-          if(boletovencimento===null || boletovencimento==="undefined"){
-            localStorage.setItem('boleto', "Erro" ); 
-          }else{
-          localStorage.setItem('boleto', boletovencimento );
-          }
-          var link= boleto.link 
-          if(link===null || link==="undefined"){
-              localStorage.setItem('link', "http://mk.redetuxnet.com.br:8080/mk/tmp/062564514d0c4283f53f045881684885.pdf" ); 
-          }else{
+
+    async function boleto(){ 
+      let promessa = new Promise((resp,rej)=>{
+        request(options, function (err, res, body) {
+          if (body.faturas.length===1){
+            for (var i = 0; i < body.faturas.length; i++) {
+              var boleto = body.faturas[i];
+              var boletovencimento = boleto.data_vencimento
+              if(boletovencimento===null || boletovencimento==="undefined"){
+                localStorage.setItem('boleto', "0" ); 
+              }else{
+                localStorage.setItem('boleto', boletovencimento );
+              }
+              var link= boleto.link
+              if(link===null || link==="undefined"){
+                localStorage.setItem('link', "0" ); 
+              }else{
                 localStorage.setItem('link', link );
+              }
+            }
+            localStorage.setItem('vetor', "1" );
+            resp(true)
+          }else{
+            localStorage.setItem('vetor', "0" ); 
+            resp(false)
           }
-        } 
+        })
       })
-    return res.redirect("enviarboleto");
+      let resultado = await promessa
+    }
+    
+      (async() => {
+        await boleto();
+        var vetor = localStorage.getItem('vetor');
+        var linkvetor = localStorage.getItem('link');
+        var vencimento = localStorage.getItem('boleto');
+        module.exports = {
+          chatid: idchat,
+          link: linkvetor,
+          venci:vencimento
+         }
+
+        if(vetor==="1"){
+          return res.redirect("enviarboleto");
+        }
+        else{
+          return res.redirect("boletonaoencontrado");
+        }
+      })();
+  
   })
 
 

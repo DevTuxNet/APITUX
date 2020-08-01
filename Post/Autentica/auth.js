@@ -16,12 +16,11 @@ if (typeof localStorage === "undefined" || localStorage === null) {
   }
 
 router.post("/auth",cors(corsOptions),function authhub(req, res){
-    
+
     var token= localStorage.getItem('token');
+    //
     var cpf = req.body.cpf;
     var idchat = req.body.idchat;
-    localStorage.setItem('idchat', idchat );
-    //localStorage.setItem('idcomp', idcomp );
     const headers = {
         "Accept":"application/json",
         "Authorization": "Bearer " + token 
@@ -40,31 +39,47 @@ router.post("/auth",cors(corsOptions),function authhub(req, res){
       json: true,
       url: url
     }
-    request(options, function (err, res, body) {
-      if (err) {
-        console.error('error posting json: ', err)
-        throw err
-      }
-      for (var i = 0; i < body.clientes.length; i++) {
-        var cpf_cnpj = body.clientes[i];
-        var nome=cpf_cnpj.nome_razaosocial
-        if(nome===null || nome==="undefined"){
-          localStorage.setItem('nome', "Erro" ); 
-        }else{
-          localStorage.setItem('nome', nome );
-        }
-        var obj=cpf_cnpj.cpf_cnpj
-        if(obj===null || obj==="undefined"){
-          localStorage.setItem('cpf_cnpj', "Erro" ); 
-        }else{
-          localStorage.setItem('cpf_cnpj', obj );
-        }
-      }
-    })
-    var cpf_cnpj= localStorage.getItem('cpf_cnpj');
-    if (cpf===cpf_cnpj){
-      return res.redirect("boasvindas");
+    async function auth(){ 
+      let promessa = new Promise((resp,rej)=>{
+        request (options, function(err, res, body, req) {
+          if (body.clientes.length===1){
+            for (var i = 0; i < body.clientes.length; i++) {
+              var cpf_cnpj = body.clientes[i];
+              var nome=cpf_cnpj.nome_razaosocial
+              if(nome===null || nome==="undefined"){
+                localStorage.setItem('nome', "0" );
+              }else{
+                localStorage.setItem('nome', nome );
+              }
+            }
+            localStorage.setItem('validacpf', "1" );
+            resp(true)
+          }else{
+            localStorage.setItem('validacpf', "0" );
+            resp(false)
+          }
+        })
+      })
+      let resultado = await promessa
+      console.log(resultado)
     }
+  
+    (async() => {
+      await auth();
+      
+    var validacpf= localStorage.getItem('validacpf');
+    var nome =  localStorage.getItem('nome');
+     module.exports = {
+      chatid: idchat,
+       titular: nome
+     }
+     if (validacpf==='1'){
+      return res.redirect("boasvindas");
+    }else{
+      return res.redirect("cpfinvalido");
+    }
+    })();
+
   })
 
 

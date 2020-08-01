@@ -5,21 +5,17 @@ var request = require('request')
 
 
  
-  router.get("/enviarboleto",function authhub(req, res){
+  router.get("/boletonaoencontrado",function authhub(req, res){
     res.send("200")
     if (typeof localStorage === "undefined" || localStorage === null) {
         var LocalStorage = require('node-localstorage').LocalStorage;
         localStorage = new LocalStorage('./scratch');
       }
       const boleto = require('../Boleto/boleto');
-        var id = boleto.chatid
-        var link = boleto.link
-        var vencimento = boleto.venci
-        console.log(id,link, vencimento)
+      var id = boleto.chatid
         var url = 'https://api.huggy.io/v3/chats/'+id+'/messages'
         var postData = {
-            "text": "Segui em anexo a sua fatura do mês "+vencimento,
-            "file": link+".pdf",
+            "text": "Boleto não encontrado",
             "isInternal": false
         }
         const headers = {

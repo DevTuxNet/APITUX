@@ -6,6 +6,8 @@ const boasvindas = require("./Post/Mensagem/boasvindas")
 const authcallback = require("./Get/Auth/Callback")
 const boleto = require("./Post/Boleto/boleto")
 const enviarboleto = require("./Post/Mensagem/enviarboleto")
+const errocpf = require("./Post/Mensagem/cpfinvalido")
+const boletonaoencontrado = require("./Post/Mensagem/boletonaoencontrado")
 var cors = require('cors')
 
 var corsOptions = {
@@ -21,7 +23,8 @@ app.use('/cliente', authcliente )
 app.use('/cliente', boasvindas )
 app.use('/cliente', boleto )
 app.use('/cliente', enviarboleto )
-
+app.use('/cliente', errocpf )
+app.use('/cliente', boletonaoencontrado )
 
 app.listen(8010, function(){
   console.log("rodando porta 8010");
