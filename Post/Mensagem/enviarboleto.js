@@ -12,34 +12,94 @@ var request = require('request')
         localStorage = new LocalStorage('./scratch');
       }
       const boleto = require('../Boleto/boleto');
-        var id = boleto.chatid
+      var id = boleto.chatid
+      var num_boleto1= localStorage.getItem('num_faturas');
+      var url = 'https://api.huggy.io/v3/chats/'+id+'/messages'
+      console.log("ok"+num_boleto1)
+      if (num_boleto1==="1"){
+        console.log("blz")
         var link = boleto.link
         var vencimento = boleto.venci
         console.log(id,link, vencimento)
-        var url = 'https://api.huggy.io/v3/chats/'+id+'/messages'
         var postData = {
             "text": "Segui em anexo a sua fatura do mês "+vencimento,
             "file": link+".pdf",
             "isInternal": false
         }
         const headers = {
-            "Content-Type": "application/json",
-            "Accept":"application/json",
-            "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImU1NTZjZTljMDhjMDZmYmNkMDIzMGI1MmJjNDUxMWQzMTVmMmI4YzBhYWI3MGNmMDI4YzY2Y2RlMGFmNTZjN2M2MjJkNThkNThlMzZhYjQ0In0.eyJhdWQiOiJBUFAtZTM0OTljMDYtZGJhMS00YTc1LTkzMjAtYTc0MzQyZWU5NzVkIiwianRpIjoiZTU1NmNlOWMwOGMwNmZiY2QwMjMwYjUyYmM0NTExZDMxNWYyYjhjMGFhYjcwY2YwMjhjNjZjZGUwYWY1NmM3YzYyMmQ1OGQ1OGUzNmFiNDQiLCJpYXQiOjE1OTYyMzUxMTYsIm5iZiI6MTU5NjIzNTExNiwiZXhwIjoxNTk4OTEzNTE2LCJzdWIiOiI2MzMwMiIsInNjb3BlcyI6WyJpbnN0YWxsX2FwcCIsInJlYWRfYWdlbnRfcHJvZmlsZSJdfQ.YjrmLHtQa6Wv07L5Fd7wSfCgWDhj8ZkOPfBGnYigFOFG635wHFgLu7MdiOcHAev0GZDuHxn_xKReLe8dngGM-kdBduZHbSBs1HSlQFcEWzIcY4LZglmtW69xBWygntReWcMzoaJBVRHZduE7I3nXfTrEjLLGAgZPNZDOpeJ5reE"  
-        };
-        var options = {
+          "Content-Type": "application/json",
+          "Accept":"application/json",
+          "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjIyMmNkZGUxN2JiYWVhYzYyNzYxMGMxNDhmYjU3NTc3ZWJlZDk5MjhkNjhiYmFiMDZkZTZlNzU0NzkyMWQ1ZDg3MjFiYmRkY2RmMWZjNjVkIn0.eyJhdWQiOiJBUFAtZTM0OTljMDYtZGJhMS00YTc1LTkzMjAtYTc0MzQyZWU5NzVkIiwianRpIjoiMjIyY2RkZTE3YmJhZWFjNjI3NjEwYzE0OGZiNTc1NzdlYmVkOTkyOGQ2OGJiYWIwNmRlNmU3NTQ3OTIxZDVkODcyMWJiZGRjZGYxZmM2NWQiLCJpYXQiOjE2MDE0MDQyNDIsIm5iZiI6MTYwMTQwNDI0MiwiZXhwIjoxNjAzOTk2MjQyLCJzdWIiOiIxMDg1OSIsInNjb3BlcyI6WyJpbnN0YWxsX2FwcCIsInJlYWRfYWdlbnRfcHJvZmlsZSJdfQ.c0mVrEETCkVCsli1In7Kg6K7U53pl3HEOog-sfZe9zVziUzQ0Irv3BUNl7ZrwkWawCufVLrHXQbNOJ70w_-2ghP0Nc8wh4NhzaJrcMBtUcXRDUQ0XdJTwzzU6l62V2EpmHEaGBR3Juo2IRt0BKo-nxUSGnt9OgG2SIEoECRmaKs"  
+      };
+      var options = {
+      method: 'post',
+      body: postData,
+      headers,
+      json: true,
+      url: url
+      } 
+      request(options, function (err, res, body) {
+          if (err) {
+          console.error('error posting json: ', err)
+          throw err
+          }
+          console.log(body)
+      })
+      }
+      else{
+        var link1 = boleto.link1
+        var vencimento1 = boleto.venci1
+        var link2 = boleto.link2
+        var vencimento2 = boleto.venci2
+        //console.log(id,link1, vencimento1)
+        //console.log(id,link2, vencimento2)
+        var postData = {
+            "text": "Segui em anexo a sua fatura do mês "+vencimento1,
+            "file": link1+".pdf",
+            "isInternal": false,
+        }
+        var postData1 = {
+          "text": "Segui em anexo a sua fatura do mês "+vencimento2,
+          "file": link2+".pdf",
+          "isInternal": false,
+      }
+        const headers = {
+          "Content-Type": "application/json",
+          "Accept":"application/json",
+          "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjIyMmNkZGUxN2JiYWVhYzYyNzYxMGMxNDhmYjU3NTc3ZWJlZDk5MjhkNjhiYmFiMDZkZTZlNzU0NzkyMWQ1ZDg3MjFiYmRkY2RmMWZjNjVkIn0.eyJhdWQiOiJBUFAtZTM0OTljMDYtZGJhMS00YTc1LTkzMjAtYTc0MzQyZWU5NzVkIiwianRpIjoiMjIyY2RkZTE3YmJhZWFjNjI3NjEwYzE0OGZiNTc1NzdlYmVkOTkyOGQ2OGJiYWIwNmRlNmU3NTQ3OTIxZDVkODcyMWJiZGRjZGYxZmM2NWQiLCJpYXQiOjE2MDE0MDQyNDIsIm5iZiI6MTYwMTQwNDI0MiwiZXhwIjoxNjAzOTk2MjQyLCJzdWIiOiIxMDg1OSIsInNjb3BlcyI6WyJpbnN0YWxsX2FwcCIsInJlYWRfYWdlbnRfcHJvZmlsZSJdfQ.c0mVrEETCkVCsli1In7Kg6K7U53pl3HEOog-sfZe9zVziUzQ0Irv3BUNl7ZrwkWawCufVLrHXQbNOJ70w_-2ghP0Nc8wh4NhzaJrcMBtUcXRDUQ0XdJTwzzU6l62V2EpmHEaGBR3Juo2IRt0BKo-nxUSGnt9OgG2SIEoECRmaKs"  
+      };
+      var options = {
+      method: 'post',
+      body: postData,
+      headers,
+      json: true,
+      url: url
+      } 
+
+      var options1 = {
         method: 'post',
-        body: postData,
+        body: postData1,
         headers,
         json: true,
         url: url
         } 
-        request(options, function (err, res, body) {
-            if (err) {
-            console.error('error posting json: ', err)
-            throw err
-            }
-        })
+      request(options, function (err, res, body) {
+          if (err) {
+          console.error('error posting json: ', err)
+          throw err
+          }
+          
+      })
+
+      request(options1, function (err, res, body) {
+        if (err) {
+        console.error('error posting json: ', err)
+        throw err
+        }
+        
+    })
+
+      }  
   })
     
 

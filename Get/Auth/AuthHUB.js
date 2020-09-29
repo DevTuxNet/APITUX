@@ -17,10 +17,10 @@ if (typeof localStorage === "undefined" || localStorage === null) {
 router.get("/authhub",cors(corsOptions),function authhub(req, res){
   var postData = {
     "grant_type":"password",
-    "client_id":"5",
-    "client_secret":"vgXuQIxOferJ6txGaJsbFOYuXjELbBMtgfi2dajR",
-    "username":"api@huggy.com.br",
-    "password":"uiasTRL4T7owOWGsp6cDQUZwrFfTybki"
+    "client_id":"10",
+    "client_secret":"C5yTNVrCrJCiIOQMN65LjupNu6yGVgVHjQ2fJfu6",
+    "username":"api@huggytuxnet.com.br",
+    "password":"3655a42c05ccd2e7a786be9dd6ca2100"
   }
 
   var url = 'https://api.tuxnet.hubsoft.com.br/oauth/token'

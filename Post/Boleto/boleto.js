@@ -28,7 +28,8 @@ router.post("/boleto",cors(corsOptions),function boleto(req, res){
     var postData = {
       "busca": "cpf_cnpj",
       "termo_busca": cpf,
-      "limit": "1"
+      "limit": "2",
+      "apenas_pendente": "sim"
     }
     var url = 'https://api.tuxnet.hubsoft.com.br/api/v1/integracao/cliente/financeiro'
 
@@ -43,9 +44,12 @@ router.post("/boleto",cors(corsOptions),function boleto(req, res){
     async function boleto(){ 
       let promessa = new Promise((resp,rej)=>{
         request(options, function (err, res, body) {
+          localStorage.setItem('num_faturas', body.faturas.length);
           if (body.faturas.length===1){
+            localStorage.setItem('vetor', "1" );
+            resp(true)
             for (var i = 0; i < body.faturas.length; i++) {
-              var boleto = body.faturas[i];
+              var boleto = body.faturas[0];
               var boletovencimento = boleto.data_vencimento
               if(boletovencimento===null || boletovencimento==="undefined"){
                 localStorage.setItem('boleto', "0" ); 
@@ -61,7 +65,42 @@ router.post("/boleto",cors(corsOptions),function boleto(req, res){
             }
             localStorage.setItem('vetor', "1" );
             resp(true)
-          }else{
+          }
+        
+          if (body.faturas.length===2){
+            for (var i = 0; i < body.faturas.length; i++) {
+              var boleto1 = body.faturas[0];
+              var boletovencimento1 = boleto1.data_vencimento
+              if(boletovencimento1===null || boletovencimento1==="undefined"){
+                localStorage.setItem('boleto1', "0" ); 
+              }else{
+                localStorage.setItem('boleto1', boletovencimento1 );
+              }
+              var link1= boleto1.link
+              if(link1===null || link1==="undefined"){
+                localStorage.setItem('link1', "0" ); 
+              }else{
+                localStorage.setItem('link1', link1 );
+              }
+
+              var boleto2 = body.faturas[1];
+              var boletovencimento2 = boleto2.data_vencimento
+              if(boletovencimento2===null || boletovencimento2==="undefined"){
+                localStorage.setItem('boleto2', "0" ); 
+              }else{
+                localStorage.setItem('boleto2', boletovencimento2 );
+              }
+              var link2=boleto2.link
+              if(link2===null || link2==="undefined"){
+                localStorage.setItem('link2', "0" ); 
+              }else{
+                localStorage.setItem('link2', link2 );
+              }
+            }
+            localStorage.setItem('vetor', "1" );
+            resp(true)
+          }
+          else{
             localStorage.setItem('vetor', "0" ); 
             resp(false)
           }
@@ -72,21 +111,43 @@ router.post("/boleto",cors(corsOptions),function boleto(req, res){
     
       (async() => {
         await boleto();
+        var num_boleto= localStorage.getItem('num_faturas');
+        console.log(num_boleto)
         var vetor = localStorage.getItem('vetor');
         var linkvetor = localStorage.getItem('link');
         var vencimento = localStorage.getItem('boleto');
-        module.exports = {
-          chatid: idchat,
-          link: linkvetor,
-          venci:vencimento
-         }
-
-        if(vetor==="1"){
-          return res.redirect("enviarboleto");
+        var linkvetor1 = localStorage.getItem('link1');
+        var vencimento1 = localStorage.getItem('boleto1');
+        var linkvetor2 = localStorage.getItem('link2');
+        var vencimento2 = localStorage.getItem('boleto2');
+        if (num_boleto==="1"){
+          console.log("okkkk")
+          module.exports = {
+            chatid: idchat,
+            link: linkvetor,
+            venci:vencimento,
+           }
+            return res.redirect("enviarboleto");
+          
         }
         else{
-          return res.redirect("boletonaoencontrado");
+          module.exports = {
+            chatid: idchat,
+            link1: linkvetor1,
+            link2: linkvetor2,
+            venci1:vencimento1,
+            venci2:vencimento2
+           }
+           if(vetor==="1"){
+            return res.redirect("enviarboleto");
+          }
+          else{
+            return res.redirect("boletonaoencontrado");
+          }
         }
+        
+
+        
       })();
   
   })

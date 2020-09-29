@@ -13,7 +13,7 @@ var request = require('request')
         var id = auth.chatid
         var url = 'https://api.huggy.io/v3/chats/'+id+'/messages'
         var postData = {
-            "text": "Olá "+nome+"!, como posso ajudar?",
+            "text": "Olá "+nome,
             "isInternal": false
         }
         const headers = {
