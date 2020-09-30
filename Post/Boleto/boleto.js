@@ -15,11 +15,13 @@ if (typeof localStorage === "undefined" || localStorage === null) {
     localStorage = new LocalStorage('./scratch');
   }
 
-router.post("/boleto",cors(corsOptions),function boleto(req, res){
-    
+router.get("/boleto",cors(corsOptions),function boleto(req, res){
+  const auth = require('../Autentica/auth');
     var token= localStorage.getItem('token');
-    var cpf = req.body.cpf;
-    var idchat = req.body.idchat;
+    var cpf = auth.cpfvalido;
+    console.log(cpf)
+    var idchat = auth.chatid;
+
     const headers = {
         "Accept":"application/json",
         "Authorization": "Bearer " + token 
@@ -28,7 +30,7 @@ router.post("/boleto",cors(corsOptions),function boleto(req, res){
     var postData = {
       "busca": "cpf_cnpj",
       "termo_busca": cpf,
-      "limit": "2",
+      "limit": "3",
       "apenas_pendente": "sim"
     }
     var url = 'https://api.tuxnet.hubsoft.com.br/api/v1/integracao/cliente/financeiro'
@@ -46,8 +48,6 @@ router.post("/boleto",cors(corsOptions),function boleto(req, res){
         request(options, function (err, res, body) {
           localStorage.setItem('num_faturas', body.faturas.length);
           if (body.faturas.length===1){
-            localStorage.setItem('vetor', "1" );
-            resp(true)
             for (var i = 0; i < body.faturas.length; i++) {
               var boleto = body.faturas[0];
               var boletovencimento = boleto.data_vencimento
@@ -82,7 +82,6 @@ router.post("/boleto",cors(corsOptions),function boleto(req, res){
               }else{
                 localStorage.setItem('link1', link1 );
               }
-
               var boleto2 = body.faturas[1];
               var boletovencimento2 = boleto2.data_vencimento
               if(boletovencimento2===null || boletovencimento2==="undefined"){
@@ -101,7 +100,6 @@ router.post("/boleto",cors(corsOptions),function boleto(req, res){
             resp(true)
           }
           else{
-            localStorage.setItem('vetor', "0" ); 
             resp(false)
           }
         })
@@ -112,8 +110,6 @@ router.post("/boleto",cors(corsOptions),function boleto(req, res){
       (async() => {
         await boleto();
         var num_boleto= localStorage.getItem('num_faturas');
-        console.log(num_boleto)
-        var vetor = localStorage.getItem('vetor');
         var linkvetor = localStorage.getItem('link');
         var vencimento = localStorage.getItem('boleto');
         var linkvetor1 = localStorage.getItem('link1');
@@ -121,16 +117,22 @@ router.post("/boleto",cors(corsOptions),function boleto(req, res){
         var linkvetor2 = localStorage.getItem('link2');
         var vencimento2 = localStorage.getItem('boleto2');
         if (num_boleto==="1"){
-          console.log("okkkk")
+          var vetor = localStorage.getItem('vetor');
           module.exports = {
             chatid: idchat,
             link: linkvetor,
             venci:vencimento,
            }
+           if(vetor==='1'){
             return res.redirect("enviarboleto");
-          
+          }
+          else{
+            return res.redirect("boletonaoencontrado");
+            
+          }
         }
-        else{
+        if(num_boleto==="2"){
+          var vetor = localStorage.getItem('vetor');
           module.exports = {
             chatid: idchat,
             link1: linkvetor1,
@@ -145,9 +147,18 @@ router.post("/boleto",cors(corsOptions),function boleto(req, res){
             return res.redirect("boletonaoencontrado");
           }
         }
-        
-
-        
+        if(num_boleto>"2"){
+          module.exports = {
+            chatid: idchat
+           }
+          return res.redirect("variosboletos");
+        }
+        else{
+          module.exports = {
+            chatid: idchat
+           }
+          return res.redirect("boletonaoencontrado");
+        }
       })();
   
   })

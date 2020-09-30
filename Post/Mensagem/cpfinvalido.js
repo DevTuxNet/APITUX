@@ -11,24 +11,26 @@ var request = require('request')
         var LocalStorage = require('node-localstorage').LocalStorage;
         localStorage = new LocalStorage('./scratch');
       }
-        var id = localStorage.getItem('idchat');
-        var url = 'https://api.huggy.io/v3/chats/'+id+'/messages'
+      const auth = require('../Autentica/auth');
+      var id = auth.chatid
+      console.log(id)
+
+        var url = 'https://api.huggy.io/v3/chats/'+id+'/tags'
         var postData = {
-            "text": "CPF/CNPJ invalido, digite novamente seu cpf",
-            "isInternal": false
-        }
+            "tags": "tag1, tag3"
+        } 
         const headers = {
-            "Content-Type": "application/json",
-            "Accept":"application/json",
-            "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImU1NTZjZTljMDhjMDZmYmNkMDIzMGI1MmJjNDUxMWQzMTVmMmI4YzBhYWI3MGNmMDI4YzY2Y2RlMGFmNTZjN2M2MjJkNThkNThlMzZhYjQ0In0.eyJhdWQiOiJBUFAtZTM0OTljMDYtZGJhMS00YTc1LTkzMjAtYTc0MzQyZWU5NzVkIiwianRpIjoiZTU1NmNlOWMwOGMwNmZiY2QwMjMwYjUyYmM0NTExZDMxNWYyYjhjMGFhYjcwY2YwMjhjNjZjZGUwYWY1NmM3YzYyMmQ1OGQ1OGUzNmFiNDQiLCJpYXQiOjE1OTYyMzUxMTYsIm5iZiI6MTU5NjIzNTExNiwiZXhwIjoxNTk4OTEzNTE2LCJzdWIiOiI2MzMwMiIsInNjb3BlcyI6WyJpbnN0YWxsX2FwcCIsInJlYWRfYWdlbnRfcHJvZmlsZSJdfQ.YjrmLHtQa6Wv07L5Fd7wSfCgWDhj8ZkOPfBGnYigFOFG635wHFgLu7MdiOcHAev0GZDuHxn_xKReLe8dngGM-kdBduZHbSBs1HSlQFcEWzIcY4LZglmtW69xBWygntReWcMzoaJBVRHZduE7I3nXfTrEjLLGAgZPNZDOpeJ5reE"  
-        };
+          "Content-Type": "application/json",
+          "Accept":"application/json",
+          "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImNiMjgwN2JmOTljMTVhNzlkMmVmNWZjYTIyZDVmYzEyNWIzNWJlNzdmYmFiN2QyNTNiZTI3YTBiYWEzY2Y1NzhmMmU0OTIzNDQwNTk2NThiIn0.eyJhdWQiOiJBUFAtZTM0OTljMDYtZGJhMS00YTc1LTkzMjAtYTc0MzQyZWU5NzVkIiwianRpIjoiY2IyODA3YmY5OWMxNWE3OWQyZWY1ZmNhMjJkNWZjMTI1YjM1YmU3N2ZiYWI3ZDI1M2JlMjdhMGJhYTNjZjU3OGYyZTQ5MjM0NDA1OTY1OGIiLCJpYXQiOjE2MDE0MjMzMjksIm5iZiI6MTYwMTQyMzMyOSwiZXhwIjoxNjA0MDE1MzI5LCJzdWIiOiIxMDg1OSIsInNjb3BlcyI6WyJpbnN0YWxsX2FwcCIsInJlYWRfYWdlbnRfcHJvZmlsZSJdfQ.Yho8eEVDKL2NKgNsSpF53Jb8GyjmdBD7Breu24ozSife-MBGeQmJEdZfs7GDOh4awg-OufMWD-c3o7kRXi7fI0OHzvuX0O-GUfUpWLiT01Nvi75h210DlTel1BQCraB2cksHrvjmaaip51lwFdh20cOE0nBXUqnHX9xhW4c0jJ0"  
+      };
         var options = {
-        method: 'post',
+        method: 'put',
         body: postData,
         headers,
         json: true,
         url: url
-        } 
+        };
         request(options, function (err, res, body) {
             if (err) {
             console.error('error posting json: ', err)

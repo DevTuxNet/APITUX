@@ -5,18 +5,19 @@ var request = require('request')
 
 
  
-  router.get("/boletonaoencontrado",function authhub(req, res){
+  router.get("/variosboletos",function authhub(req, res){
     res.send("200")
     if (typeof localStorage === "undefined" || localStorage === null) {
         var LocalStorage = require('node-localstorage').LocalStorage;
         localStorage = new LocalStorage('./scratch');
       }
-      const boleto = require('../Boleto/boleto');
-      var id = boleto.chatid
+      const auth = require('../Autentica/auth');
+      var id = auth.chatid
+      console.log(id)
 
         var url = 'https://api.huggy.io/v3/chats/'+id+'/tags'
         var postData = {
-            "tags": "tag1, tag2"
+            "tags": "tag1, tag4"
         } 
         const headers = {
           "Content-Type": "application/json",

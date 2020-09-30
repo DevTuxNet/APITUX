@@ -42,16 +42,8 @@ router.post("/auth",cors(corsOptions),function authhub(req, res){
     async function auth(){ 
       let promessa = new Promise((resp,rej)=>{
         request (options, function(err, res, body, req) {
+          console.log(body.clientes.length)
           if (body.clientes.length===1){
-            for (var i = 0; i < body.clientes.length; i++) {
-              var cpf_cnpj = body.clientes[i];
-              var nome=cpf_cnpj.nome_razaosocial
-              if(nome===null || nome==="undefined"){
-                localStorage.setItem('nome', "0" );
-              }else{
-                localStorage.setItem('nome', nome );
-              }
-            }
             localStorage.setItem('validacpf', "1" );
             resp(true)
           }else{
@@ -61,21 +53,24 @@ router.post("/auth",cors(corsOptions),function authhub(req, res){
         })
       })
       let resultado = await promessa
-      console.log(resultado)
+     // console.log(resultado)
     }
   
     (async() => {
       await auth();
       
     var validacpf= localStorage.getItem('validacpf');
-    var nome =  localStorage.getItem('nome');
-     module.exports = {
-      chatid: idchat,
-       titular: nome
-     }
+     
      if (validacpf==='1'){
-      return res.redirect("boasvindas");
+      module.exports = {
+        chatid: idchat,
+        cpfvalido: cpf
+       }
+      return res.redirect("boleto");
     }else{
+      module.exports = {
+        chatid: idchat
+       }
       return res.redirect("cpfinvalido");
     }
     })();
