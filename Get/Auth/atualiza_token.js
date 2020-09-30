@@ -11,14 +11,13 @@ if (typeof localStorage === "undefined" || localStorage === null) {
   localStorage = new LocalStorage('./scratch');
 }
 
-router.get("/callback",function callback(req, res){
-
+router.get("/atualizatoken",function callback(req, res){
+    var atualiza = localStorage.getItem('atualizatoken')
     var postData = {
-        "grant_type": "authorization_code",
-        "redirect_uri": "186.195.8.2:8010/auth/callback",
+        "grant_type": "refresh_token",
         "client_id": "APP-e3499c06-dba1-4a75-9320-a74342ee975d",
         "client_secret": "3ce9f321-b3d1-4070-a71b-16b2c315b87d",
-        "code": "def502005a8a1cbd7ab9aeb989e9cbd4602f7d688d7790b1e7d3d60f5b37eb83a6fb845198bfc6b5927f6cf71ee797152de3f69ad6371059c8abe8894ac6d771c8c58ae427f1a268ae79e8835d035231b391cc26cb40cb23ad50a73b1cdfd03e7fdc61c8bf16eb12e035bb32fd435a341df31c6a2a806d85573735bcda795ad91298eea14bebf2557a6ca17737b86b4f6f19a9ee77a59bbfe24fb1457b44b4aad8a2c1d33d5e82b078aabd4a003f88df4962fbf70537eb02344796d45334962bfe97f17bb9998f968dca52c9343f41c6fa57f3706e080463fced24ce14406ef9d23b5cbb21cea06ea238784d622bf24660629f48dbdd239af6f2200ddc4527f86c5486d7aaaccaac1a3c84f65fcf8943adff7272575ce761b6b794773e74aa20b423bfed7982995aaf07b6d595e19edabe9113328935169ba1e3202a18aef9b715587492eb12e6bc839647ba2198c56c3120cacc5b9ca9375af7d97136ff39815cd96c82846a850112695e004811578214d1d14d751bccc8ba46b23c01960f01a804a5721cdf869a049c2bcddad44438b32b377cc92635704e0fcfd768f4711c8f05d67db980056605fd3b90"
+        "refresh_token": atualiza
       }
     var url = 'https://auth.huggy.app/oauth/access_token'
 

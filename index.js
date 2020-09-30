@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const authhub = require("./Get/Auth/AuthHUB")
+const atualiza_token = require("./Get/Auth/atualiza_token")
 const authcliente = require("./Post/Autentica/auth")
 const authcallback = require("./Get/Auth/Callback")
 const boleto = require("./Post/Boleto/boleto")
@@ -18,6 +19,7 @@ app.use(cors(corsOptions))
 
 app.use('/auth', authhub )
 app.use('/auth', authcallback )
+app.use('/auth', atualiza_token )
 
 app.use('/cliente', authcliente )
 app.use('/cliente', variosboletos )

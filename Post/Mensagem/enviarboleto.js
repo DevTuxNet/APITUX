@@ -15,9 +15,8 @@ var request = require('request')
       var id = boleto.chatid
       var num_boleto1= localStorage.getItem('num_faturas');
       var url = 'https://api.huggy.io/v3/chats/'+id+'/messages'
-      console.log("ok"+num_boleto1)
+      var tokenhuggy = localStorage.getItem('tokenhuggy');
       if (num_boleto1==="1"){
-        console.log("blz")
         var link = boleto.link
         var vencimento = boleto.venci
         console.log(id,link, vencimento)
@@ -29,7 +28,7 @@ var request = require('request')
         const headers = {
           "Content-Type": "application/json",
           "Accept":"application/json",
-          "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjIyMmNkZGUxN2JiYWVhYzYyNzYxMGMxNDhmYjU3NTc3ZWJlZDk5MjhkNjhiYmFiMDZkZTZlNzU0NzkyMWQ1ZDg3MjFiYmRkY2RmMWZjNjVkIn0.eyJhdWQiOiJBUFAtZTM0OTljMDYtZGJhMS00YTc1LTkzMjAtYTc0MzQyZWU5NzVkIiwianRpIjoiMjIyY2RkZTE3YmJhZWFjNjI3NjEwYzE0OGZiNTc1NzdlYmVkOTkyOGQ2OGJiYWIwNmRlNmU3NTQ3OTIxZDVkODcyMWJiZGRjZGYxZmM2NWQiLCJpYXQiOjE2MDE0MDQyNDIsIm5iZiI6MTYwMTQwNDI0MiwiZXhwIjoxNjAzOTk2MjQyLCJzdWIiOiIxMDg1OSIsInNjb3BlcyI6WyJpbnN0YWxsX2FwcCIsInJlYWRfYWdlbnRfcHJvZmlsZSJdfQ.c0mVrEETCkVCsli1In7Kg6K7U53pl3HEOog-sfZe9zVziUzQ0Irv3BUNl7ZrwkWawCufVLrHXQbNOJ70w_-2ghP0Nc8wh4NhzaJrcMBtUcXRDUQ0XdJTwzzU6l62V2EpmHEaGBR3Juo2IRt0BKo-nxUSGnt9OgG2SIEoECRmaKs"  
+          "Authorization": "Bearer "+tokenhuggy 
       };
       var options = {
       method: 'post',
