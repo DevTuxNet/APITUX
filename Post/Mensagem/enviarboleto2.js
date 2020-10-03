@@ -5,13 +5,13 @@ var request = require('request')
 
 
  
-  router.get("/enviarboleto",function authhub(req, res){
+  router.get("/enviarboleto2",function authhub(req, res){
     res.send("200")
     if (typeof localStorage === "undefined" || localStorage === null) {
         var LocalStorage = require('node-localstorage').LocalStorage;
         localStorage = new LocalStorage('./scratch');
       }
-      const boleto = require('../Boleto/boleto');
+      const boleto = require('../Boleto/boleto2');
       var id = boleto.chatid
       var num_boleto1= localStorage.getItem('num_faturas');
       var url = 'https://api.huggy.io/v3/chats/'+id+'/messages'

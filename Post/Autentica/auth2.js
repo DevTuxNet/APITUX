@@ -15,17 +15,17 @@ if (typeof localStorage === "undefined" || localStorage === null) {
     localStorage = new LocalStorage('./scratch');
   }
 
-router.post("/auth",cors(corsOptions),function authhub(req, res){
-    var senhavalida= "9046bfd88d6925c8bb83005cf6a345a0"
+router.post("/auth2",cors(corsOptions),function authhub(req, res){
+    var senhavalida = "9046bfd88d6925c8bb83005cf6a345a0"
     var token= localStorage.getItem('token');
     //
     var cpf = req.body.cpf;
     var idchat = req.body.idchat;
-    var senha = req.body.senha
-     
+    var senha = req.body.senha;
+    
     if(senha!=senhavalida){
 	res.send("400")
-	}	
+	}
 
     const headers = {
         "Accept":"application/json",
@@ -50,10 +50,10 @@ router.post("/auth",cors(corsOptions),function authhub(req, res){
         request (options, function(err, res, body, req) {
           console.log(body.clientes.length)
           if (body.clientes.length===1){
-            localStorage.setItem('validacpf', "1" );
+            localStorage.setItem('validacpf2', "1" );
             resp(true)
           }else{
-            localStorage.setItem('validacpf', "0" );
+            localStorage.setItem('validacpf2', "0" );
             resp(false)
           }
         })
@@ -65,19 +65,20 @@ router.post("/auth",cors(corsOptions),function authhub(req, res){
     (async() => {
       await auth();
       
-    var validacpf= localStorage.getItem('validacpf');
+    var validacpf= localStorage.getItem('validacpf2');
      
      if (validacpf==='1'){
       module.exports = {
         chatid: idchat,
         cpfvalido: cpf
        }
-      return res.redirect("boleto");
+      return res.redirect("boleto2");
     }else{
+      console.log("ok")
       module.exports = {
         chatid: idchat
        }
-      return res.redirect("cpfinvalido");
+      return res.redirect("cpfinvalido2");
     }
     })();
 
