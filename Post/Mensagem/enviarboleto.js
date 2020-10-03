@@ -21,7 +21,7 @@ var request = require('request')
         var vencimento = boleto.venci
         console.log(id,link, vencimento)
         var postData = {
-            "text": "Segui em anexo a sua fatura do mês "+vencimento,
+            "text": "Segue em anexo a sua fatura do mês "+vencimento,
             "file": link+".pdf",
             "isInternal": false
         }
